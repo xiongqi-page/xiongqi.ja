@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr" itemscope itemtype="https://schema.org/Game">
+  <head>
+    <title>熊棋 - パンダチェス</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="熊棋（パンダチェス）の完全ルール。熊棋はシャンチー（中国象棋）から派生した抽象戦略ゲームで、8×8の盤上で行われます。駒の種類、動き方、終局条件について解説します。">
+    <meta name="keywords" content="シャンチー, 熊棋, ションチー, Xiongqi, ルール, パンダチェス, ゲーム">
+
+    <meta property="og:title" content="熊棋">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ja.xiongqi.page/">
+    <meta property="og:image" content="https://ja.xiongqi.page/img/xiongqi-starting-position.webp">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="熊棋 - パンダチェス">
+    <meta name="twitter:image" content="https://ja.xiongqi.page/img/xiongqi-starting-position.webp">
+
+    <link rel="icon" type="image/svg+xml" sizes="any" href="favicon.svg">
+
+    <link rel="alternate" hreflang="en" href="https://en.xiongqi.page/">
+    <link rel="alternate" hreflang="fr" href="https://fr.xiongqi.page/">
+    <link rel="alternate" hreflang="ja" href="https://ja.xiongqi.page/">
+    <link rel="alternate" hreflang="th" href="https://th.xiongqi.page/">
+    <link rel="alternate" hreflang="zh" href="https://zh.xiongqi.page/">
+    <link rel="alternate" hreflang="x-default" href="https://xiongqi.page/">
+
+    <link rel="canonical" href="https://ja.xiongqi.page/">
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "@id": "https://ja.xiongqi.page/#game",
+        "name": "熊棋 — パンダチェス",
+        "alternateName": [
+          "熊棋",
+          "Xiongqi",
+          "Panda Chess"
+        ],
+        "description": "熊棋（パンダチェス）の完全ルール。熊棋はシャンチー（中国象棋）から派生した抽象戦略ゲームで、8×8の盤上で行われます。駒の種類、動き方、終局条件について解説します。",
+        "keywords": "シャンチー, 熊棋, ションチー, Xiongqi, ルール, パンダチェス, ゲーム, 中国将棋, 変種, ボードゲーム",
+        "image": "https://ja.xiongqi.page/img/xiongqi-starting-position.webp",
+        "url": "https://ja.xiongqi.page/",
+        "inLanguage": "ja",
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 2,
+          "maxValue": 2
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Cyril Veltin"
+        },
+        "license": "Public domain",
+        "isBasedOn": {
+          "@type": "ShortStory",
+          "name": "張の夢",
+          "url": "https://ja.xiongqi.page/toshi-densetsu/",
+          "inLanguage": "ja",
+          "author": {
+            "@type": "Person",
+            "name": "Cyril Veltin"
+          },
+          "license": "Public domain"
+        },
+        "sameAs": [
+          "https://xiongqi.page/",
+          "https://en.xiongqi.page/",
+          "https://fr.xiongqi.page/",
+          "https://zh.xiongqi.page/",
+          "https://th.xiongqi.page/"
+        ],
+        "datePublished": "2019-04-28"
+      }
+    </script>
+
+    <style>
+      header {
+        display: flex;
+        gap: 1em;
+      }
+
+      article figure,
+      header figure,
+      header p {
+        margin: 0;
+      }
+
+      article figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      article figure figcaption {
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+
+      nav[aria-label="目次"] {
+        display: inline-block;
+        margin: 1em 0;
+        padding: 1em;
+        background: #ccc;
+        border-radius: 1em;
+      }
+
+      nav[aria-label="目次"] ol {
+        margin: 0;
+        padding-left: 1.5em;
+      }
+
+      nav[aria-label="目次"] li {
+        margin: 0.3em 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <figure>
+        <img src="favicon.svg" alt="熊棋ロゴ" height="64" width="64">
+      </figure>
+
+      <p>
+        熊棋（ションチー）は「パンダチェス」とも呼ばれ、シャンチー（中国象棋）から派生した抽象戦略ゲームで、8×8の盤上で行われます。<br>
+        本文書では、ゲームを曖昧さなく実装するために必要かつ十分なルールを記述します。
+      </p>
+    </header>
+
+    <hr>
+
+    <main>
+      <article>
+        <h1>ゲームルール</h1>
+
+        <nav aria-label="目次">
+          <strong>目次</strong>
+          <ol>
+            <li><a href="#kihon-gainen">基本概念</a></li>
+            <li><a href="#ban-haichi">盤と初期配置</a></li>
+            <li><a href="#idou-toru">移動と駒取りの原則</a></li>
+            <li><a href="#oute-gouhou">攻撃されているマス、王手、着手の合法性</a></li>
+            <li><a href="#shoukaku">兵の昇格</a></li>
+            <li><a href="#shuukyoku">終局</a></li>
+          </ol>
+        </nav>
+
+        <section id="kihon-gainen">
+          <h2>1. 基本概念</h2>
+
+          <ul>
+            <li>ゲームは二人のプレイヤーで対戦します：南側プレイヤーと北側プレイヤー。</li>
+            <li>南側プレイヤーが常に先手です。</li>
+            <li>その後、交互に一手ずつ指します。</li>
+            <li>一手とは、以下のルールに従って自分の駒を一つ動かすことです。</li>
+            <li>「パス」はありません：自分の手番では、合法手を指すか、さもなければ対局は終了します。</li>
+            <li>熊棋の中心となる駒は将（帥）です：将が取られるか、守れなくなった時点で対局は終了します。</li>
+          </ul>
+        </section>
+
+        <section id="ban-haichi">
+          <h2>2. 盤と初期配置</h2>
+
+          <section id="ban">
+            <h3>2.1 盤</h3>
+
+            <ul>
+              <li>熊棋は8列8段（8×8）の盤で行われます。</li>
+              <li>南側プレイヤーから見て、列は左から右へアルファベットで表記します：a、b、c、d、e、f、g、h。</li>
+              <li>南側プレイヤーから見て、段は下から上へ数字で表記します：1、2、3、4、5、6、7、8。</li>
+              <li>南側プレイヤーは1段目に近い領域を占め、北側プレイヤーは8段目に近い領域を占めます。</li>
+              <li>「河」は4段目と5段目の間にあります。</li>
+            </ul>
+          </section>
+
+          <section id="koma">
+            <h3>2.2 駒</h3>
+
+            <p>各陣営は以下の駒を持ちます：</p>
+
+            <ul>
+              <li>将（帥）1枚</li>
+              <li>士（仕）1枚</li>
+              <li>車（俥）2枚</li>
+              <li>熊（雄）2枚</li>
+              <li>馬（傌）2枚</li>
+              <li>砲（炮）2枚</li>
+              <li>卒（兵）8枚</li>
+            </ul>
+          </section>
+
+          <section id="shoki-haichi">
+            <h3>2.3 初期配置</h3>
+
+            <p>両陣営の初期配置は構造的に同一で、鏡像対称となっています。</p>
+
+            <figure>
+              <img
+                src="img/xiongqi-starting-position.webp"
+                alt="初期配置図：各陣営の1段目は左から右へ、車、馬、熊、士、将、熊、馬、車。2段目はc列とf列に砲が1枚ずつ。3段目には8枚の兵が並ぶ。"
+                height="769"
+                width="768">
+
+              <figcaption>熊棋の初期配置</figcaption>
+            </figure>
+
+            <section id="minami">
+              <h4>2.3.1 南側</h4>
+
+              <ul>
+                <li>1段目（a1からh1）：俥、傌、雄、仕、帥、雄、傌、俥。</li>
+                <li>2段目：c2とf2に炮が1枚ずつ。他のマスは空。</li>
+                <li>3段目：各マスに兵が1枚ずつ（a3からh3）。</li>
+              </ul>
+            </section>
+
+            <section id="kita">
+              <h4>2.3.2 北側</h4>
+
+              <ul>
+                <li>8段目（a8からh8）：車、馬、熊、士、將、熊、馬、車。</li>
+                <li>7段目：c7とf7に砲が1枚ずつ。他のマスは空。</li>
+                <li>6段目：各マスに卒が1枚ずつ（a6からh6）。</li>
+              </ul>
+            </section>
+          </section>
+
+          <section id="koma-hyouki">
+            <h3>2.4 駒の表記規則</h3>
+
+            <p>
+              慣例として、各駒の種類には漢字とラテン文字の略称が対応しています。
+              南側は大文字、北側は小文字を使用します。
+              これらの規則は一部の棋譜システムやプログラム実装で使用されますが、
+              移動ルールには影響しません。
+            </p>
+
+            <table>
+              <caption class="visually-hidden">各陣営の駒表記</caption>
+              <thead>
+                <tr>
+                  <th rowspan="2" scope="col">駒の種類</th>
+                  <th colspan="2" scope="colgroup">南側</th>
+                  <th colspan="2" scope="colgroup">北側</th>
+                </tr>
+                <tr>
+                  <th scope="col">漢字</th>
+                  <th scope="col"><abbr title="略称">略</abbr></th>
+                  <th scope="col">漢字</th>
+                  <th scope="col"><abbr title="略称">略</abbr></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">士</th>
+                  <td>仕</td>
+                  <td><code>A</code></td>
+                  <td>士</td>
+                  <td><code>a</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">熊</th>
+                  <td>雄</td>
+                  <td><code>B</code></td>
+                  <td>熊</td>
+                  <td><code>b</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">砲</th>
+                  <td>炮</td>
+                  <td><code>C</code></td>
+                  <td>砲</td>
+                  <td><code>c</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">妃</th>
+                  <td>妃</td>
+                  <td><code>E</code></td>
+                  <td>騛</td>
+                  <td><code>e</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">将</th>
+                  <td>帥</td>
+                  <td><code>G</code></td>
+                  <td>將</td>
+                  <td><code>g</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">馬</th>
+                  <td>傌</td>
+                  <td><code>H</code></td>
+                  <td>馬</td>
+                  <td><code>h</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">車</th>
+                  <td>俥</td>
+                  <td><code>R</code></td>
+                  <td>車</td>
+                  <td><code>r</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">兵</th>
+                  <td>兵</td>
+                  <td><code>S</code></td>
+                  <td>卒</td>
+                  <td><code>s</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <section id="idou-toru">
+          <h2>3. 移動と駒取りの原則</h2>
+
+          <ul>
+            <li>自分の手番では、自陣の駒を一つ動かします。</li>
+            <li>移動とは、出発マスから到着マスへ駒を動かすことです。</li>
+            <li>駒は自陣の駒が占めるマスには移動できません。</li>
+            <li>到着マスに敵の駒がある場合、その駒を取り、盤から除去します。</li>
+            <li>特に断りがない限り、駒は他の駒を「飛び越える」ことができません：中間のマスはすべて空でなければなりません。</li>
+            <li>着手後に自分の将が王手されている状態になる手は違法です。</li>
+          </ul>
+
+          <section id="shou">
+            <h3>3.1 将（帥）</h3>
+
+            <ul>
+              <li>将は縦または横に1マス移動します。</li>
+              <li>将は隣接する敵駒のマスに移動することで駒を取ります。</li>
+              <li>将は宮に制限されません：盤上の任意の合法なマスに自由に移動できます。</li>
+              <li>将は敵に攻撃されているマスで手を終えることはできません。</li>
+            </ul>
+          </section>
+
+          <section id="shi">
+            <h3>3.2 士（仕）</h3>
+
+            <ul>
+              <li>士は斜めに1マス移動します。</li>
+              <li>士は斜めに隣接する敵駒のマスに移動することで駒を取ります。</li>
+              <li>士は宮に制限されません：盤上の任意の合法なマスに自由に移動できます。</li>
+            </ul>
+          </section>
+
+          <section id="sha">
+            <h3>3.3 車（俥）</h3>
+
+            <ul>
+              <li>車は縦または横に任意のマス数移動します。</li>
+              <li>車は他の駒を飛び越えることができません。</li>
+              <li>車は同じ行または列にある敵駒のマスに移動することで駒を取ります。</li>
+            </ul>
+          </section>
+
+          <section id="kuma">
+            <h3>3.4 熊（雄）</h3>
+
+            <ul>
+              <li>熊は斜めに任意のマス数移動します。</li>
+              <li>熊は他の駒を飛び越えることができません。</li>
+              <li>熊は同じ対角線上にある敵駒のマスに移動することで駒を取ります。</li>
+            </ul>
+          </section>
+
+          <section id="uma">
+            <h3>3.5 馬（傌）</h3>
+
+            <ul>
+              <li>馬の移動は二段階で行われます：
+                <ol>
+                  <li>出発マスから縦横いずれかの方向（上、下、左、右）に1マス；</li>
+                  <li>その中間位置から斜め外側に1マス。</li>
+                </ol>
+              </li>
+              <li>馬は完全には飛び越えられません：隣接する縦横のマス（馬の「脚」）は空でなければなりません。そのマスが塞がっている場合、その方向への移動は阻まれます。</li>
+              <li>到着マスは空であるか、敵駒が占めていなければなりません。後者の場合、その駒を取ります。</li>
+            </ul>
+          </section>
+
+          <section id="hou">
+            <h3>3.6 砲（炮）</h3>
+
+            <dl>
+              <dt>駒を取らない移動</dt>
+              <dd>
+                <ul>
+                  <li>砲は車と同様に移動します：縦または横に任意のマス数。</li>
+                  <li>中間のマスはすべて空でなければなりません。</li>
+                </ul>
+              </dd>
+
+              <dt>駒取り</dt>
+              <dd>
+                <ul>
+                  <li>砲は目標の敵駒と同じ行または列にいなければなりません。</li>
+                  <li>砲と目標の間にちょうど1枚の駒（どちらの陣営でも可）がなければなりません：この駒を「台」と呼びます。</li>
+                  <li>台と目標の間に他の駒があってはなりません。</li>
+                  <li>砲は目標のマスに直接移動し、駒を取ります。</li>
+                </ul>
+              </dd>
+            </dl>
+
+            <p>砲は台がない場合、または砲と目標の間に複数の駒がある場合は駒を取ることができません。</p>
+          </section>
+
+          <section id="hi">
+            <h3>3.7 妃（騛）</h3>
+
+            <p>妃は二つの異なる移動方式を組み合わせます：車の動きとナイトの動きです。</p>
+
+            <ul>
+              <li>
+                各手において、妃は以下の二つのモードから一つを選びます：
+
+                <dl>
+                  <dt>車モード</dt>
+                  <dd>
+                    <ul>
+                      <li>妃は縦または横に任意のマス数移動します。</li>
+                      <li>他の駒を飛び越えることはできません。</li>
+                      <li>敵駒のマスに移動することで駒を取ります。</li>
+                    </ul>
+                  </dd>
+
+                  <dt>ナイトモード</dt>
+                  <dd>
+                    <ul>
+                      <li>妃は「L字型」に移動します：縦横いずれかの方向に2マス、その後直角方向に1マス。</li>
+                      <li>中間の駒を飛び越えることができます。</li>
+                      <li>到着マスは空であるか、敵駒が占めていなければなりません。後者の場合、その駒を取ります。</li>
+                    </ul>
+                  </dd>
+                </dl>
+              </li>
+
+              <li>妃は一手につき一つのモードしか使用できません。組み合わせることはできません。</li>
+
+              <li>攻撃されているマス（特に王手の場合）を判断する際は、両方のモードで到達可能なすべてのマスを考慮します。</li>
+            </ul>
+            <p>
+              <strong>注：</strong>「ナイトモード」は3.5節で説明した馬の動きとは異なります。ナイトモードでは駒を<em>飛び越える</em>ことができます。
+            </p>
+          </section>
+
+          <section id="hei">
+            <h3>3.8 兵（卒）</h3>
+
+            <p>各陣営の兵は反対方向に進みます：</p>
+
+            <ul>
+              <li>南側の兵は北へ進みます（段数が増加：3段目から8段目へ）。</li>
+              <li>北側の卒は南へ進みます（段数が減少：6段目から1段目へ）。</li>
+            </ul>
+
+            <section id="hei-kawamae">
+              <h4>3.8.1 河を渡る前</h4>
+
+              <ul>
+                <li>南側の兵は1〜4段目にいる間は「河を渡っていない」状態です。</li>
+                <li>北側の卒は5〜8段目にいる間は「河を渡っていない」状態です。</li>
+                <li>河を渡る前、兵は：
+                  <ul>
+                    <li>前方に1マスのみ移動できます；</li>
+                    <li>同様に駒を取ります（前方1マス）；</li>
+                    <li>後退も横移動もできません。</li>
+                  </ul>
+                </li>
+              </ul>
+            </section>
+
+            <section id="hei-kawaato">
+              <h4>3.8.2 河を渡った後</h4>
+
+              <ul>
+                <li>南側の兵は5段目以降に達すると「河を渡った」状態になります。</li>
+                <li>北側の卒は4段目以下に達すると「河を渡った」状態になります。</li>
+                <li>河を渡った後、兵は：
+                  <ul>
+                    <li>前方に1マス移動する能力を維持します；</li>
+                    <li>横に1マス移動する能力を得ます（左または右）；</li>
+                    <li>前方または横方向に駒を取ることができます；</li>
+                    <li>依然として後退はできません。</li>
+                  </ul>
+                </li>
+              </ul>
+            </section>
+          </section>
+        </section>
+
+        <section id="oute-gouhou">
+          <h2>4. 攻撃されているマス、王手、着手の合法性</h2>
+
+          <section id="kougeki-masu">
+            <h3>4.1 攻撃されているマス</h3>
+
+            <p>
+              移動ルール（3.1〜3.8節）を適用し、障害物を考慮した上で、
+              ある陣営の駒がそのマスに移動して仮想的な敵駒を取ることができる場合、
+              そのマスはその陣営に攻撃されていると言います。
+            </p>
+
+            <ul>
+              <li>マスが攻撃されているかどうかを判断する際、その移動が自分の将を王手にさらすかどうかは考慮しません（ピンされていても、マスは「攻撃されていない」ことにはなりません）。</li>
+              <li>兵は駒を取るのと同じ方法で攻撃します：
+                <ul>
+                  <li>河を渡る前：前方1マス；</li>
+                  <li>河を渡った後：前方または横方向1マス。</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
+          <section id="oute">
+            <h3>4.2 王手</h3>
+
+            <ul>
+              <li>将がいるマスが少なくとも一つの敵駒に攻撃されている場合、将は王手されています。</li>
+              <li>自分の将が王手されている状態になる手は違法です。</li>
+              <li>したがって、プレイヤーは以下のことができません：
+                <ul>
+                  <li>現在の王手を無視する；</li>
+                  <li>自分の将を攻撃されているマスに意図的に移動する；</li>
+                  <li>将を守っている駒を動かして将を攻撃にさらす。</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
+          <section id="oute-taiou">
+            <h3>4.3 王手への対応</h3>
+
+            <p>
+              プレイヤーが手番開始時に将が王手されている場合、王手を解除する手を指さなければなりません。可能な対応は三種類です：
+            </p>
+
+            <ul>
+              <li>将を攻撃されていないマスに移動する；</li>
+              <li>王手をかけている駒を取る；</li>
+              <li>攻撃している駒と将の間に駒を挟む。</li>
+            </ul>
+
+            <p>
+              これらの対応がいずれも不可能な場合、将は詰みです（6.1節参照）。
+            </p>
+          </section>
+
+          <section id="hitei-kisoku">
+            <h3>4.4 否定規則</h3>
+
+            <ul>
+              <li>キャスリングはありません。</li>
+              <li>取った駒を打ち直すことはできません。</li>
+            </ul>
+          </section>
+
+          <section id="taimen">
+            <h3>4.5 将の対面禁止</h3>
+
+            <p>以下の条件がすべて満たされるとき、両将は「対面」していると言います：</p>
+
+            <ul>
+              <li>両将が同じ列にいる；</li>
+              <li>両将の間に駒がない；</li>
+              <li>南側の帥が北側の將より下の段にいる。</li>
+            </ul>
+
+            <p>
+              このような配置は禁止されています。いかなる合法手もこの配置をもたらすことはできません。
+            </p>
+          </section>
+        </section>
+
+        <section id="shoukaku">
+          <h2>5. 兵の昇格</h2>
+
+          <ul>
+            <li>兵が合法手で敵陣の最終段（南側は8段目、北側は1段目）に到達したとき、プレイヤーはその兵を昇格させることができます。</li>
+
+            <li>昇格は任意です：プレイヤーは兵をそのままにするか、即座に昇格させるかを選べます。</li>
+
+            <li>最終段にいる兵は、プレイヤーがその兵を動かした直後であれば、後から昇格させることができます。これにより、プレイヤーは適切なタイミングまで昇格の決定を遅らせる戦略が可能になります。</li>
+
+            <li>昇格する場合、兵は取り除かれ、同じマスにプレイヤーが選んだ以下の駒のいずれかが置かれます：
+              <ul>
+                <li>妃、</li>
+                <li>士、</li>
+                <li>砲、</li>
+                <li>車、</li>
+                <li>熊、</li>
+                <li>馬。</li>
+              </ul>
+            </li>
+
+            <li>将への昇格は禁止されています。</li>
+
+            <li>昇格する駒の選択は、盤上に現在ある駒や取られた駒に関係なく自由です。したがって、プレイヤーは同じ種類の駒を複数持つことができます。</li>
+          </ul>
+        </section>
+
+        <section id="shuukyoku">
+          <h2>6. 終局</h2>
+
+          <section id="tsumi">
+            <h3>6.1 詰みによる勝利</h3>
+
+            <p>以下の条件がすべて満たされるとき、一方は詰みです：</p>
+
+            <ul>
+              <li>その将が王手されている；</li>
+              <li>王手を解除する合法手が存在しない。</li>
+            </ul>
+
+            <p>詰まされた側の負け、相手の勝ちです。</p>
+          </section>
+
+          <section id="sutaremeto">
+            <h3>6.2 ステイルメイト</h3>
+
+            <p>ステイルメイトは以下の場合に発生します：</p>
+
+            <ul>
+              <li>あるプレイヤーの手番である；</li>
+              <li>そのプレイヤーに合法手がない；</li>
+              <li>そのプレイヤーの将は王手されていない。</li>
+            </ul>
+
+            <p>熊棋では、ステイルメイトは動けなくなった側の負けとなります。</p>
+          </section>
+
+          <section id="sankai-hikiwake">
+            <h3>6.3 同一局面三回による引き分け</h3>
+
+            <p>同一局面が対局中に三回現れたとき、その局面は繰り返しと見なされます。</p>
+
+            <p>二つの局面が同一であるとは：</p>
+
+            <ul>
+              <li>同じ陣営の同じ駒が同じマスを占めている；</li>
+              <li>同じ陣営の手番である。</li>
+            </ul>
+
+            <p>ある局面が三回目に達したとき、対局は引き分けと宣言されます。</p>
+          </section>
+
+          <section id="senryoku-fusoku">
+            <h3>6.4 戦力不足による引き分け</h3>
+
+            <p>
+              どちらの陣営も相手を詰ませる手段がない場合、
+              どのような手順を続けても、戦力不足による引き分けとなります。
+              これには、盤上に両将のみが残っている局面などが含まれます。
+            </p>
+
+            <p>このような局面は引き分けとなります。</p>
+          </section>
+
+          <section id="sonota-shuukyoku">
+            <h3>6.5 その他の場合</h3>
+
+            <p>
+              上記以外にも、投了、時間切れ、または双方の合意による引き分けで対局が終了することがあります。
+            </p>
+          </section>
+        </section>
+      </article>
+    </main>
+
+    <hr>
+
+    <nav aria-label="言語選択">
+      <p>他の言語でもご覧いただけます：</p>
+
+      <ul>
+        <li><a title="英語に切り替え" href="https://en.xiongqi.page/" lang="en">English</a></li>
+        <li><a title="フランス語に切り替え" href="https://fr.xiongqi.page/" lang="fr">Français</a></li>
+        <li><a title="中国語に切り替え" href="https://zh.xiongqi.page/" lang="zh">中文</a></li>
+        <li><a title="タイ語に切り替え" href="https://th.xiongqi.page/" lang="th">ภาษาไทย</a></li>
+      </ul>
+    </nav>
+
+    <hr>
+
+    <footer>
+      <p>
+        このゲームは<a href="toshi-densetsu/" title="張の夢" itemprop="isBasedOn" itemscope itemtype="https://schema.org/ShortStory"><span itemprop="name">張という農夫の不思議な夢</span></a>に起源を持ちます。
+        そのルール、名称、ロゴはパブリックドメインに属します：
+        誰でも自由に使用、改変、配布することができ、事前の許可は必要ありません。
+      </p>
+    </footer>
+  </body>
+</html>
